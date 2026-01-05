@@ -1,2 +1,799 @@
-# nacl123
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CDMS 客戶檔案與服務詳情 - 集中式介面</title>
+    <!-- 載入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f3f4f6; /* 淺灰色背景 */
+        }
+        /* 定義滾動條樣式 */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #d1d5db; /* 淺灰藍色 */
+            border-radius: 3px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background-color: #f9fafb;
+        }
+        /* 確保選中項目的 SVG 顏色為白色 */
+        .bg-indigo-700 svg {
+            color: white;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- 側邊欄 (Sidebar) - 專業服務導航軸 -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 md:relative md:flex-shrink-0 flex flex-col custom-scroll"
+        aria-label="Service Navigation">
+        
+        <!-- 系統 Logo/標題 (點擊可跳轉至首頁/商品資訊頁) -->
+        <a href="#" class="flex items-center justify-center h-16 bg-indigo-600 shadow-xl flex-shrink-0">
+            <span class="text-xl font-extrabold text-white tracking-widest">CDMS 客戶資料管理</span>
+        </a>
+
+        <!-- 導航選單 (功能導航) -->
+        <nav class="flex-grow p-4 space-y-1 overflow-y-auto">
+            
+            <!-- 主要服務區塊 - 客戶資料管理系統 -->
+            <div class="text-xs font-semibold uppercase text-gray-400 mt-4 mb-2 px-3">客戶資料管理系統</div>
+
+            <!-- ISP 服務 (當前選中，點擊後中間區塊內容切換) -->
+            <a href="#" id="nav-isp" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
+                <!-- SVG Icon for Internet -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <path d="M12 2a10 10 0 0 0-9.2 13.5c.3 1 1 2 2.5 2.5a6 6 0 0 1 12.4 0c1.5-.5 2.2-1.5 2.5-2.5A10 10 0 0 0 12 2z"/><path d="M7 16l-1 5l6-3l6 3l-1-5"/>
+                </svg>
+                ISP 服務
+            </a>
+
+            <!-- 社區資訊 -->
+            <a href="#" id="nav-community" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
+                <!-- SVG Icon for Community -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="12 22 12 12"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                </svg>
+                社區資訊
+            </a>
+
+            <!-- 雙網方案 -->
+            <a href="#" id="nav-dualnet" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
+                <!-- SVG Icon for Plan/Package -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="8 13 12 17 16 13"/>
+                </svg>
+                雙網方案
+            </a>
+
+            <!-- 智生活服務 (巢狀結構) -->
+            <div class="text-xs font-semibold uppercase text-gray-400 mt-4 mb-2 px-3">智生活服務</div>
+            
+            <!-- 家電清洗 -->
+            <a href="#" id="nav-cleaning" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
+                <!-- SVG Icon for Washing Machine/AC -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="12" cy="12" r="2"/><path d="M16 16L18 18M6 18L8 16"/>
+                </svg>
+                家電清洗
+            </a>
+
+            <!-- 影視服務 -->
+            <a href="#" id="nav-video" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
+                <!-- SVG Icon for TV/Movie -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 8H2M16 16H8"/>
+                </svg>
+                影視服務
+            </a>
+            
+            <!-- 居家清潔 -->
+            <a href="#" id="nav-house" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
+                <!-- SVG Icon for Cleaning -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <path d="M14.5 17H7.5A4.5 4.5 0 0 1 7.5 8.5H16A4.5 4.5 0 0 1 16 17H14.5zM12 11v6"/>
+                </svg>
+                居家清潔
+            </a>
+            
+            <!-- 其他服務 (留白) -->
+            <a href="#" id="nav-other" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
+                <!-- SVG Icon for More/Dots -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
+                    <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                </svg>
+                其他
+            </a>
+
+            <!-- 客戶需求單 (Action Link - 放置在底部顯眼處) -->
+            <div class="mt-8 pt-4 border-t border-gray-700">
+                <a href="#" class="flex items-center justify-center w-full px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 shadow-md transition duration-150">
+                    <!-- SVG Icon for Note/Document -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/>
+                    </svg>
+                    立單：客戶需求單
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- 主內容區域 (Main Content Area) -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- 頂部導航欄 (Header) -->
+        <header class="flex items-center justify-between h-16 px-6 bg-white shadow-lg flex-shrink-0 z-10">
+            <!-- 漢堡菜單按鈕 (僅在移動端顯示) -->
+            <button id="menu-toggle" class="text-gray-500 hover:text-gray-600 md:hidden p-2 rounded-lg transition duration-150">
+                <!-- SVG Icon for Menu -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <!-- 標題 -->
+            <h1 class="text-xl font-bold text-gray-800">
+                <span class="text-indigo-600">客戶檔案</span>
+            </h1>
+
+            <!-- 使用者資訊/動作 -->
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-500 hidden sm:block">系統架構師</span>
+                <button class="flex items-center p-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition duration-150">
+                    <!-- SVG Icon for User -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    管理員
+                </button>
+            </div>
+        </header>
+
+        <!-- 主要內容區域 (單一滾動流) -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6 custom-scroll">
+            <div class="container mx-auto flex flex-col space-y-6">
+                
+                <!-- 1. 客戶核心資料區 (Core Data Card) -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-indigo-600">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b pb-3">
+                        <h2 class="text-2xl font-extrabold text-gray-800">客戶檔案</h2>
+                        <div class="flex space-x-2 mt-2 md:mt-0">
+                            <!-- 狀態標籤 - 客訴抱怨處理中 (緊急、醒目) -->
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                <!-- SVG Icon for Alert -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                                客訴抱怨處理中
+                            </span>
+                            <!-- 狀態標籤 - 續約期 (提醒、重要) -->
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                <!-- SVG Icon for Calendar -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                ISP續約期 (剩 28 天)
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- 核心資料網格 (8 個欄位) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">客戶編號</p>
+                            <p class="font-bold text-indigo-600">C001</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">客戶姓名/聯絡人</p>
+                            <p class="font-bold text-gray-900">王小明</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">手機號碼</p>
+                            <p class="font-bold text-gray-900">0912-345678</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">生日</p>
+                            <p class="font-bold text-gray-900">1985-10-25</p>
+                        </div>
+                        <div class="sm:col-span-2 lg:col-span-2 p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">地址</p>
+                            <p class="font-bold text-gray-900">台北市信義區忠孝東路五段 100 號 12 樓</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">社區名稱</p>
+                            <p class="font-bold text-gray-900">信義之星</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">Mail</p>
+                            <p class="font-bold text-gray-900 truncate">wang.xiaoming@example.com</p>
+                        </div>
+                        <div class="p-2 bg-gray-50 rounded-lg">
+                            <p class="text-xs font-medium text-gray-500">身分證字號</p>
+                            <p class="font-bold text-gray-900">A123****78</p>
+                        </div>
+                    </div>
+                </div> <!-- End Core Data Card -->
+
+                <!-- 2. 服務狀態與提醒 (Service Status Card) -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-yellow-500">
+                    <h3 class="text-lg font-bold text-gray-800 mb-3 border-b pb-2">商品服務狀態與提醒</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                        
+                        <!-- 服務中商品 (ISP 到期日已整合至此) -->
+                        <div>
+                            <p class="font-semibold text-green-600 mb-2">現在服務中商品 (服務中)</p>
+                            <ul class="space-y-2 text-sm">
+                                <li class="p-3 bg-green-50 rounded-xl border border-green-200 flex justify-between items-center">
+                                    <div>
+                                        <span class="font-bold text-green-800">ISP 服務:</span>
+                                        <span class="ml-2">連線中 (500M/250M)</span>
+                                    </div>
+                                    <!-- ISP 到期日顯示在此 -->
+                                    <span class="text-xs font-semibold text-red-600">到期日: 2025-11-20</span>
+                                </li>
+                                <li class="p-3 bg-green-50 rounded-xl border border-green-200">
+                                    <span class="font-bold text-green-800">居家清潔:</span>
+                                    <span class="ml-2">年約方案</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 即將可服務/到期提醒 -->
+                        <div>
+                            <p class="font-semibold text-yellow-600 mb-2">即將到期 / 可服務商品提醒</p>
+                            <ul class="space-y-2 text-xs">
+                                <li class="p-2 bg-yellow-50 rounded-xl border border-yellow-200">
+                                    <span class="font-bold text-yellow-800">雙網方案：</span>合約即將到期 (2025-11-20)
+                                </li>
+                                <li class="p-2 bg-yellow-50 rounded-xl border border-yellow-200">
+                                    <span class="font-bold text-yellow-800">影視服務：</span>服務即將到期 (2025-12-31)
+                                </li>
+                                <li class="p-2 bg-blue-50 rounded-xl border border-blue-200">
+                                    <span class="font-bold text-blue-800">家電清洗：</span>距離上次清洗已滿一年 (可促銷)
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> <!-- End Service Status Card -->
+                
+                <!-- 3. 快捷操作區塊 (Quick Actions Card - 新位置：緊接在商品服務狀態下方) -->
+                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-gray-400">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">快捷操作</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center text-sm">
+                        
+                        <button class="p-4 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
+                            <!-- SVG Icon for Image -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            客戶提供照片
+                        </button>
+                        <button class="p-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
+                            <!-- SVG Icon for Line Chat -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                            Line 對話紀錄
+                        </button>
+                        <button class="p-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
+                            <!-- SVG Icon for Phone Call/Message -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M22 16.92v3a2 2 0 0 1-2 2h-3.32a18.57 18.57 0 0 1-6.8-2.61a18.57 18.57 0 0 1-6.8-2.61a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3.32a18.57 18.57 0 0 1 6.8 2.61a18.57 18.57 0 0 1 6.8 2.61a2 2 0 0 1 2 2z"/></svg>
+                            聯絡紀錄
+                        </button>
+                        <button class="p-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
+                            <!-- SVG Icon for Billing -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M20 12V8H4v4m0 8h16v-4H4v4zM16 4h4V2h-4v2zM4 2v2h4V2H4zM2 10h20M7 16h2M13 16h4"/></svg>
+                            帳務資訊
+                        </button>
+                        <button class="p-4 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
+                            <!-- SVG Icon for Workflow -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                            會辦系統
+                        </button>
+                    </div>
+                </div> <!-- End Quick Actions Card -->
+
+                <!-- 4. 服務詳情內容 (Detail Content - 新位置：在快捷操作下方) -->
+                <div id="detail-content" class="bg-white p-6 rounded-2xl shadow-xl min-h-[40vh] border-t-4 border-gray-300">
+                    <!-- 內容將由 JavaScript 載入 (預設為 ISP 服務) -->
+                    <p class="text-gray-500 text-center py-10">載入服務詳情中...</p>
+                </div> <!-- End Detail Content (Dynamic Area) -->
+
+            </div>
+        </main>
+    </div>
+
+    <!-- 側邊欄覆蓋層 (Overlay for mobile menu) -->
+    <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+
+    <script type="text/javascript">
+        // =================================================================================
+        // 側邊欄 & RWD 邏輯
+        // =================================================================================
+        const sidebar = document.getElementById('sidebar');
+        const toggleButton = document.getElementById('menu-toggle');
+        const overlay = document.getElementById('overlay');
+
+        function toggleSidebar() {
+            // 切換側邊欄的 translate 狀態
+            const isHidden = sidebar.classList.toggle('-translate-x-full');
+            
+            // 切換覆蓋層的顯示狀態
+            if (isHidden) {
+                overlay.classList.add('hidden');
+            } else {
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        toggleButton.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar); // 點擊覆蓋層關閉側邊欄
+
+        // 監聽窗口大小變化，若進入桌面模式，確保側邊欄和覆蓋層狀態正確
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // md breakpoint in Tailwind is 768px
+                // 在桌面模式下，確保側邊欄顯示，覆蓋層隱藏
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                // 在移動模式下，如果側邊欄是開的，則顯示覆蓋層
+                if (!sidebar.classList.contains('-translate-x-full')) {
+                     overlay.classList.remove('hidden');
+                }
+            }
+        });
+
+        // 初始檢查 (確保頁面加載時的狀態正確)
+        if (window.innerWidth >= 768) {
+             sidebar.classList.remove('-translate-x-full');
+        } else {
+             sidebar.classList.add('-translate-x-full');
+        }
+
+        // =================================================================================
+        // 內容動態載入邏輯
+        // =================================================================================
+
+        const detailContent = document.getElementById('detail-content');
+        const navLinks = document.querySelectorAll('nav a'); // 所有側邊欄連結
+
+        // 1. ISP 服務內容
+        function generateISPContent() {
+            return `
+                <h2 class="text-xl font-bold text-indigo-600 mb-4 border-b pb-2">ISP 服務 - 基本資訊與網路狀態</h2>
+                <p class="text-gray-500 mb-4">網際網路服務供應商 (ISP) 的詳細連線與合約資訊。</p>
+
+                <!-- ISP 基本資訊 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">基本資訊</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">社區網速</p>
+                        <p class="font-bold text-gray-900">500M / 250M</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">光化 / 乙太</p>
+                        <p class="font-bold text-gray-900">光化 (FTTH)</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">網路到期日</p>
+                        <p class="font-bold text-red-600">2025-11-20</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">分享器型號</p>
+                        <p class="font-bold text-gray-900">ASUS RT-AX55</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">路由資訊</p>
+                        <p class="font-bold text-gray-900">Static IP / 內網 A100</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <p class="text-xs font-medium text-indigo-600">負責業務</p>
+                        <p class="font-bold text-gray-900">陳大仁 (Ext. 301)</p>
+                    </div>
+                </div>
+
+                <!-- 網路狀況後台紀錄 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">網路狀況後台紀錄</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 bg-gray-100 rounded-lg text-gray-700">
+                        <p class="font-semibold mb-1">Log / Ping / 流量表 / 近期報修:</p>
+                        <ul class="list-disc list-inside ml-4 text-gray-600">
+                            <li>Log: 過去 7 天無異常紀錄。</li>
+                            <li>Ping: 平均延遲 5ms (正常)。</li>
+                            <li>流量表: 本月使用量 800GB (高用量戶)。</li>
+                            <li>近期報修: 無 (上次報修: 2024-03-15, 已結案)。</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 客戶需求單入口 -->
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：ISP 服務相關需求</span>
+                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立需求單
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 2. 社區資訊內容
+        function generateCommunityContent() {
+            return `
+                <h2 class="text-xl font-bold text-green-600 mb-4 border-b pb-2">社區資訊 - 信義之星</h2>
+                <p class="text-gray-500 mb-4">社區的整體合作狀態與環境資訊，有助於交叉銷售。</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+                    <!-- 社區基本資料 -->
+                    <div class="col-span-1 p-4 bg-green-50 rounded-xl border border-green-200">
+                        <h3 class="font-bold text-green-700 mb-2">社區基本資料</h3>
+                        <ul class="space-y-1">
+                            <li><span class="font-medium text-gray-600">總戶數:</span> 300 戶</li>
+                            <li><span class="font-medium text-gray-600">合約狀態:</span> 合作中 (2023-2028)</li>
+                            <li><span class="font-medium text-gray-600">導入年份:</span> 2023 年</li>
+                            <li><span class="font-medium text-gray-600">社區導入類型:</span> 全光纖社區導入 (GPON)</li>
+                            <li><span class="font-medium text-gray-600">社區保全名稱:</span> 台灣保全</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- 社區優惠 & 工程 -->
+                    <div class="col-span-1 p-4 bg-green-50 rounded-xl border border-green-200">
+                        <h3 class="font-bold text-green-700 mb-2">社區優惠與工程</h3>
+                        <ul class="space-y-1">
+                            <li><span class="font-medium text-gray-600">社區優惠:</span> 網速升級折扣 (長期)</li>
+                            <li><span class="font-medium text-gray-600">團購活動:</span> 智生活服務 8 折 (2025 Q4)</li>
+                            <li><span class="font-medium text-gray-600">社區工程:</span> 預計 2026 年進行線路升級。</li>
+                        </ul>
+                    </div>
+
+                    <!-- 特殊備註 -->
+                    <div class="col-span-1 p-4 bg-gray-100 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-700 mb-2">特殊備註</h3>
+                        <p class="text-sm text-gray-600">管委會對雙網方案興趣高，可優先推廣。
+                        <p class="text-sm text-gray-600 mt-2">請注意：該社區網路尖峰時段負載較高，報修需優先處理。</p>
+                    </div>
+                </div>
+                
+                <!-- 客戶需求單入口 -->
+                <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                    <span class="font-semibold text-yellow-800">客戶需求單 (入口)：社區相關資訊更新/建議等需求</span>
+                    <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                        立需求單
+                    </button>
+                </div>
+            `;
+        }
+
+        // 3. 雙網方案內容 (已更新)
+        function generateDualNetContent() {
+            return `
+                <h2 class="text-xl font-bold text-orange-600 mb-4 border-b pb-2">雙網方案</h2>
+                <p class="text-gray-500 mb-4">檢視客戶對於雙網方案的銷售狀態和申辦處理進度。</p>
+
+                <!-- 方案銷售狀態 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">方案銷售狀態</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-blue-100 rounded-lg border border-blue-300">
+                        <p class="text-xs font-medium text-blue-600">狀態</p>
+                        <p class="font-bold text-blue-800">申辦中</p>
+                    </div>
+                    <div class="p-3 bg-green-100 rounded-lg border border-green-300">
+                        <p class="text-xs font-medium text-green-600">合約狀態</p>
+                        <p class="font-bold text-green-800">合約簽訂完成</p>
+                    </div>
+                    <div class="p-3 bg-red-100 rounded-lg border border-red-300">
+                        <p class="text-xs font-medium text-red-600">網路優惠期</p>
+                        <p class="font-bold text-red-800">2 個月</p>
+                    </div>
+                    <div class="p-3 bg-gray-100 rounded-lg border border-gray-200">
+                        <p class="text-xs font-medium text-gray-600">申辦人員</p>
+                        <p class="font-bold text-gray-800">王小花 (Ext. 202)</p>
+                    </div>
+                </div>
+
+                <!-- 客戶申辦資訊與進度 (新增區塊) -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">客戶申辦資訊與進度</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-6">
+                    <!-- 申辦細節 -->
+                    <div class="space-y-2">
+                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">原門號:</span> 遠傳</p>
+                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">攜碼方案:</span> 中華999方案</p>
+                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">網路加購價:</span> 0元</p>
+                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">贈送項目:</span> 網路2個月</p>
+                    </div>
+                    <!-- 進度追蹤 -->
+                    <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                        <h4 class="font-bold text-yellow-700 mb-2">申辦進度</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-gray-700">
+                            <li>SIM卡已取得 (已完成)</li>
+                            <li>已上線 (門號攜入完成)</li>
+                            <li class="font-bold text-red-600">待開通 (預計開通日: 2025-11-02)</li>
+                        </ul>
+                        <div class="mt-3 text-xs text-right text-gray-500">
+                            最後更新: 2025-10-31
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 動作區塊 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">立單與電商連結</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-blue-800">派工單：可立單給各負責部門業務派工（記錄工時）</span>
+                        <button class="flex items-center text-blue-700 bg-blue-200 hover:bg-blue-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立派工單
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：方案調整/報價等需求</span>
+                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立需求單
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-green-800">電商平台 (入口)：前往雙網方案訂購頁面</span>
+                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            前往訂購
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 4. 家電清洗內容
+        function generateCleaningContent() {
+            return `
+                <h2 class="text-xl font-bold text-purple-600 mb-4 border-b pb-2">智生活服務 - 家電清洗</h2>
+                <p class="text-gray-500 mb-4">客戶歷史家電清洗服務紀錄與付款資訊。</p>
+
+                <!-- 家電清洗紀錄 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">家電清洗紀錄 (最近一次)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <p class="text-xs font-medium text-purple-600">清洗日期</p>
+                        <p class="font-bold text-gray-900">2024-10-25</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <p class="text-xs font-medium text-purple-600">清洗家電</p>
+                        <p class="font-bold text-gray-900">冷氣 (3台) / 洗衣機 (1台)</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <p class="text-xs font-medium text-purple-600">機齡</p>
+                        <p class="font-bold text-gray-900">冷氣 5 年 / 洗衣機 2 年</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                        <p class="text-xs font-medium text-purple-600">費用</p>
+                        <p class="font-bold text-red-600">TWD 9,500</p>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">訂單與付款資訊</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-gray-100 rounded-lg border border-gray-200">
+                        <p class="text-xs font-medium text-gray-600">訂單編號</p>
+                        <p class="font-bold text-gray-800">CL20241025001</p>
+                    </div>
+                    <div class="md:col-span-2 p-3 bg-gray-100 rounded-lg border border-gray-200">
+                        <p class="text-xs font-medium text-gray-600">付款資訊</p>
+                        <p class="font-bold text-gray-800">信用卡一次付清 (結尾 4321)</p>
+                    </div>
+                </div>
+
+                <!-- 動作區塊 -->
+                <div class="space-y-4 text-sm">
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：服務調整/預約/客訴等需求</span>
+                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立需求單
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-green-800">訂購服務、電商平台 (入口)：前往清洗服務訂購頁面</span>
+                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            前往電商
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 5. 影視服務內容
+        function generateVideoContent() {
+            return `
+                <h2 class="text-xl font-bold text-red-600 mb-4 border-b pb-2">智生活服務 - 影視服務</h2>
+                <p class="text-gray-500 mb-4">客戶歷史影視服務訂購紀錄。</p>
+
+                <!-- 影視服務訂購紀錄 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">影視服務訂購紀錄 (最近一次)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                        <p class="text-xs font-medium text-red-600">訂購方案品項資訊</p>
+                        <p class="font-bold text-gray-900">豪華影視包 (含 HBO, Netflix 基礎)</p>
+                    </div>
+                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                        <p class="text-xs font-medium text-red-600">使用期限</p>
+                        <p class="font-bold text-red-600">至 2025-12-31 (即將到期)</p>
+                    </div>
+                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                        <p class="text-xs font-medium text-red-600">訂單編號</p>
+                        <p class="font-bold text-gray-900">V20241001001</p>
+                    </div>
+                </div>
+
+                <!-- 動作區塊 -->
+                <div class="space-y-4 text-sm mt-6 border-t pt-4">
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：方案升級/續約/退訂等需求</span>
+                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立需求單
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-green-800">訂購服務、電商平台 (入口)：前往影視服務訂購頁面</span>
+                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            前往電商
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 6. 居家清潔內容
+        function generateHouseCleaningContent() {
+            return `
+                <h2 class="text-xl font-bold text-cyan-600 mb-4 border-b pb-2">智生活服務 - 居家清潔</h2>
+                <p class="text-gray-500 mb-4">客戶居家清潔服務訂購紀錄與服務排程。</p>
+
+                <!-- 居家清潔訂購紀錄 -->
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">居家清潔訂購紀錄 (當前方案)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
+                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
+                        <p class="text-xs font-medium text-cyan-600">服務方案品項資訊</p>
+                        <p class="font-bold text-gray-900">每月兩次 (4 小時/次) 年約方案</p>
+                    </div>
+                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
+                        <p class="text-xs font-medium text-cyan-600">服務期限</p>
+                        <p class="font-bold text-gray-900">2025-01-01 至 2025-12-31</p>
+                    </div>
+                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
+                        <p class="text-xs font-medium text-cyan-600">下次預約日期</p>
+                        <p class="font-bold text-gray-900">2025-11-05 (已確認)</p>
+                    </div>
+                </div>
+
+                <!-- 動作區塊 -->
+                <div class="space-y-4 text-sm mt-6 border-t pt-4">
+                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：排程調整/服務內容更改等需求</span>
+                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            立需求單
+                        </button>
+                    </div>
+                    
+                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
+                        <span class="font-semibold text-green-800">電商平台 (入口)：前往居家清潔服務訂購頁面</span>
+                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                            前往電商
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 7. 其他服務內容 (留白)
+        function generateOtherContent() {
+            return `
+                <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">智生活服務 - 其他服務</h2>
+                <p class="text-gray-500 mb-4">預留區塊，用於日後新服務上架，例如：社區團購、健康管理等。</p>
+
+                <div class="p-8 bg-gray-100 rounded-xl text-center text-gray-500 border border-dashed border-gray-300 min-h-[200px] flex items-center justify-center">
+                    <p class="text-lg font-semibold">此處為新服務上架的留白區塊</p>
+                </div>
+
+                <!-- 客戶需求單入口 -->
+                <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg text-sm flex justify-between items-center">
+                    <span class="font-semibold text-red-800">客戶需求單：點此可立單將客戶需求轉到各部門 (例如：提議新服務)</span>
+                    <button class="flex items-center text-red-700 bg-red-200 hover:bg-red-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
+                        立需求單
+                    </button>
+                </div>
+            `;
+        }
+
+        /**
+         * 設定活動連結的樣式
+         * @param {string} activeId 當前活動連結的 ID
+         */
+        function setActiveLink(activeId) {
+            navLinks.forEach(link => {
+                link.classList.remove('bg-indigo-700', 'text-white', 'font-bold');
+                link.classList.add('text-gray-300', 'font-medium', 'hover:bg-gray-700', 'hover:text-white');
+                
+                // 重置所有 SVG Icon 顏色為灰色
+                const icon = link.querySelector('svg');
+                if (icon) {
+                    icon.classList.remove('text-white');
+                    icon.classList.add('text-gray-400');
+                }
+            });
+
+            const activeLink = document.getElementById(activeId);
+            if (activeLink) {
+                // 設定活動連結的背景和文字樣式
+                activeLink.classList.remove('text-gray-300', 'font-medium', 'hover:bg-gray-700', 'hover:text-white');
+                activeLink.classList.add('bg-indigo-700', 'text-white', 'font-bold', 'shadow-inner');
+
+                // 設定活動連結的 SVG Icon 顏色為白色
+                const activeIcon = activeLink.querySelector('svg');
+                if (activeIcon) {
+                    activeIcon.classList.remove('text-gray-400');
+                    activeIcon.classList.add('text-white');
+                }
+            }
+        }
+
+        /**
+         * 載入指定 ID 的內容到詳情區塊
+         * @param {string} contentId 連結的 ID
+         */
+        function loadContent(contentId) {
+            let contentHtml = '';
+            let activeId = contentId;
+
+            switch (contentId) {
+                case 'nav-isp':
+                    contentHtml = generateISPContent();
+                    break;
+                case 'nav-community':
+                    contentHtml = generateCommunityContent();
+                    break;
+                case 'nav-dualnet':
+                    contentHtml = generateDualNetContent();
+                    break;
+                case 'nav-cleaning':
+                    contentHtml = generateCleaningContent();
+                    break;
+                case 'nav-video':
+                    contentHtml = generateVideoContent();
+                    break;
+                case 'nav-house':
+                    contentHtml = generateHouseCleaningContent();
+                    break;
+                case 'nav-other':
+                    contentHtml = generateOtherContent();
+                    break;
+                default:
+                    contentHtml = generateISPContent(); // 預設載入 ISP 服務
+                    activeId = 'nav-isp';
+            }
+
+            detailContent.innerHTML = contentHtml;
+            setActiveLink(activeId);
+        }
+
+        // 附加事件監聽器到所有導航連結
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadContent(e.currentTarget.id);
+                // 在移動設備上，點擊後關閉側邊欄
+                if (window.innerWidth < 768) {
+                    toggleSidebar();
+                }
+            });
+        });
+
+        // 頁面載入完成後，載入預設內容 (ISP 服務)
+        window.addEventListener('load', () => {
+             loadContent('nav-isp');
+        });
+    </script>
+</body>
+</html># nacl123
 工作
