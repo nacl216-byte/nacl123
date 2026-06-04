@@ -3,796 +3,785 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDMS 客戶檔案與服務詳情 - 集中式介面</title>
-    <!-- 載入 Tailwind CSS CDN -->
+    <title>Ivy Yen | AI 戰略與營運轉型專家</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --walnut: #3E2723;
+            --oak: #D7C4B1;
+            --sand: #F9F7F4;
+            --charcoal: #2C2C2C;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            background-color: #f3f4f6; /* 淺灰色背景 */
+            background-color: var(--sand);
+            color: var(--charcoal);
+            font-family: 'Noto Sans TC', sans-serif;
         }
-        /* 定義滾動條樣式 */
-        .custom-scroll::-webkit-scrollbar {
-            width: 6px;
+
+        h1, h2, h3, .serif { font-family: 'Noto Serif TC', serif; }
+
+        /* ── Hero ── */
+        .hero-section {
+            background: linear-gradient(170deg, #F5F2EE 0%, #E8E2DB 100%);
+            padding: 5.5rem 2rem 3rem;
         }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background-color: #d1d5db; /* 淺灰藍色 */
-            border-radius: 3px;
+
+        /* ── KPI Cards ── */
+        .kpi-card {
+            background: white;
+            border-bottom: 3px solid var(--oak);
+            transition: transform 0.3s ease;
         }
-        .custom-scroll::-webkit-scrollbar-track {
-            background-color: #f9fafb;
+        .kpi-card:hover { transform: translateY(-4px); }
+
+        .kpi-number {
+            font-size: 2.4rem;
+            line-height: 1;
+            color: var(--walnut);
+            font-family: 'Noto Serif TC', serif;
         }
-        /* 確保選中項目的 SVG 顏色為白色 */
-        .bg-indigo-700 svg {
+
+        /* ── Tab Nav ── */
+        .tab-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(249, 247, 244, 0.96);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(62, 39, 35, 0.1);
+        }
+
+        .tab-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .tab-scroll::-webkit-scrollbar { display: none; }
+
+        .tab-inner {
+            display: flex;
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .tab-btn {
+            flex-shrink: 0;
+            padding: 1rem 1.4rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: #9D8E84;
+            border-bottom: 2px solid transparent;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            background: none;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover { color: var(--walnut); }
+
+        .tab-btn.active {
+            color: var(--walnut);
+            border-bottom-color: var(--walnut);
+            font-weight: 700;
+        }
+
+        .tab-count {
+            background: #E8E2DB;
+            color: #7A6B62;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 20px;
+            letter-spacing: 0;
+        }
+        .tab-btn.active .tab-count {
+            background: var(--walnut);
             color: white;
+        }
+
+        /* ── Panels ── */
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+            animation: fadeUp 0.35s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Panel Header ── */
+        .panel-header {
+            padding: 2.5rem 0 1.5rem;
+            border-bottom: 1px solid #E8E2DB;
+            margin-bottom: 3rem;
+        }
+        .panel-cat-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.45em;
+            color: #B5A49A;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        /* ── Project Jump Links ── */
+        .jump-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+        .jump-link {
+            font-size: 11px;
+            color: #9D8E84;
+            background: white;
+            border: 1px solid #E8E2DB;
+            padding: 3px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+        .jump-link:hover {
+            background: var(--walnut);
+            color: white;
+            border-color: var(--walnut);
+        }
+
+        /* ── Project Sections ── */
+        .project-section {
+            padding: 3rem 0;
+            border-bottom: 1px solid #E8E2DB;
+            scroll-margin-top: 70px;
+        }
+        .project-section:last-child { border-bottom: none; }
+
+        /* ── Image Containers ── */
+        .img-frame {
+            border: 1px solid #E8E2DB;
+            background: #fff;
+            padding: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+        }
+        .img-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 2px;
+        }
+
+        .fig-tag {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            background: rgba(62, 39, 35, 0.72);
+            color: white;
+            padding: 2px 10px;
+            font-size: 9px;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            z-index: 10;
+        }
+
+        /* ── Labels & Tags ── */
+        .tech-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--oak);
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .chip {
+            background: #E8E2DB;
+            color: #3E2723;
+            padding: 3px 10px;
+            font-size: 11px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .annotation {
+            border-left: 3px solid var(--oak);
+            padding-left: 1rem;
+            font-size: 0.88rem;
+            color: #5D5751;
+        }
+
+        /* ── Dark card (Project 09) ── */
+        .dark-card {
+            background: #2E2926;
+            color: #E8E2DB;
+            padding: 2rem;
+            border-radius: 12px;
+        }
+        .dark-card .tech-label { color: var(--oak); }
+
+        /* ── Capability strip ── */
+        .cap-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
         }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="antialiased">
 
-    <!-- 側邊欄 (Sidebar) - 專業服務導航軸 -->
-    <aside id="sidebar"
-        class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 transition-transform duration-300 ease-in-out transform -translate-x-full md:translate-x-0 md:relative md:flex-shrink-0 flex flex-col custom-scroll"
-        aria-label="Service Navigation">
-        
-        <!-- 系統 Logo/標題 (點擊可跳轉至首頁/商品資訊頁) -->
-        <a href="#" class="flex items-center justify-center h-16 bg-indigo-600 shadow-xl flex-shrink-0">
-            <span class="text-xl font-extrabold text-white tracking-widest">CDMS 客戶資料管理</span>
-        </a>
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<header class="hero-section text-center">
+    <div class="max-w-4xl mx-auto">
+        <span style="font-size:10px;letter-spacing:.5em;color:#aaa;text-transform:uppercase;display:block;margin-bottom:1rem;">
+            AI Operations &amp; Strategy Portfolio
+        </span>
+        <h1 class="text-4xl md:text-5xl font-light leading-tight mb-2">
+            精準對接業務與開發端
+        </h1>
+        <p class="serif italic text-stone-500 text-2xl md:text-3xl mb-8">
+            數據驅動轉型，產出 100% 實務系統
+        </p>
 
-        <!-- 導航選單 (功能導航) -->
-        <nav class="flex-grow p-4 space-y-1 overflow-y-auto">
-            
-            <!-- 主要服務區塊 - 客戶資料管理系統 -->
-            <div class="text-xs font-semibold uppercase text-gray-400 mt-4 mb-2 px-3">客戶資料管理系統</div>
-
-            <!-- ISP 服務 (當前選中，點擊後中間區塊內容切換) -->
-            <a href="#" id="nav-isp" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
-                <!-- SVG Icon for Internet -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <path d="M12 2a10 10 0 0 0-9.2 13.5c.3 1 1 2 2.5 2.5a6 6 0 0 1 12.4 0c1.5-.5 2.2-1.5 2.5-2.5A10 10 0 0 0 12 2z"/><path d="M7 16l-1 5l6-3l6 3l-1-5"/>
-                </svg>
-                ISP 服務
-            </a>
-
-            <!-- 社區資訊 -->
-            <a href="#" id="nav-community" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
-                <!-- SVG Icon for Community -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="12 22 12 12"/><path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                </svg>
-                社區資訊
-            </a>
-
-            <!-- 雙網方案 -->
-            <a href="#" id="nav-dualnet" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150">
-                <!-- SVG Icon for Plan/Package -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="8 13 12 17 16 13"/>
-                </svg>
-                雙網方案
-            </a>
-
-            <!-- 智生活服務 (巢狀結構) -->
-            <div class="text-xs font-semibold uppercase text-gray-400 mt-4 mb-2 px-3">智生活服務</div>
-            
-            <!-- 家電清洗 -->
-            <a href="#" id="nav-cleaning" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
-                <!-- SVG Icon for Washing Machine/AC -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="12" cy="12" r="2"/><path d="M16 16L18 18M6 18L8 16"/>
-                </svg>
-                家電清洗
-            </a>
-
-            <!-- 影視服務 -->
-            <a href="#" id="nav-video" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
-                <!-- SVG Icon for TV/Movie -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 8H2M16 16H8"/>
-                </svg>
-                影視服務
-            </a>
-            
-            <!-- 居家清潔 -->
-            <a href="#" id="nav-house" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
-                <!-- SVG Icon for Cleaning -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <path d="M14.5 17H7.5A4.5 4.5 0 0 1 7.5 8.5H16A4.5 4.5 0 0 1 16 17H14.5zM12 11v6"/>
-                </svg>
-                居家清潔
-            </a>
-            
-            <!-- 其他服務 (留白) -->
-            <a href="#" id="nav-other" class="flex items-center p-3 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-xl transition duration-150 ml-2">
-                <!-- SVG Icon for More/Dots -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3 text-gray-400">
-                    <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
-                </svg>
-                其他
-            </a>
-
-            <!-- 客戶需求單 (Action Link - 放置在底部顯眼處) -->
-            <div class="mt-8 pt-4 border-t border-gray-700">
-                <a href="#" class="flex items-center justify-center w-full px-4 py-3 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-700 shadow-md transition duration-150">
-                    <!-- SVG Icon for Note/Document -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-                        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/>
-                    </svg>
-                    立單：客戶需求單
-                </a>
+        <!-- KPI Strip -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div class="kpi-card p-5 rounded-lg shadow-sm">
+                <div style="font-size:10px;letter-spacing:.2em;color:#aaa;text-transform:uppercase;margin-bottom:6px;">行政諮詢降幅</div>
+                <div class="kpi-number">-70%</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">主管與行政負擔顯著釋放</div>
             </div>
-        </nav>
-    </aside>
+            <div class="kpi-card p-5 rounded-lg shadow-sm">
+                <div style="font-size:10px;letter-spacing:.2em;color:#aaa;text-transform:uppercase;margin-bottom:6px;">業績逆勢成長</div>
+                <div class="kpi-number">65%</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">AI質檢與工項自動化帶動</div>
+            </div>
+            <div class="kpi-card p-5 rounded-lg shadow-sm">
+                <div style="font-size:10px;letter-spacing:.2em;color:#aaa;text-transform:uppercase;margin-bottom:6px;">作業正確率</div>
+                <div class="kpi-number">100%</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">消除人為記憶誤差</div>
+            </div>
+            <div class="kpi-card p-5 rounded-lg shadow-sm">
+                <div style="font-size:10px;letter-spacing:.2em;color:#aaa;text-transform:uppercase;margin-bottom:6px;">人效大幅躍升</div>
+                <div class="kpi-number">79%⁺</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">各項自動化效益總結</div>
+            </div>
+        </div>
 
-    <!-- 主內容區域 (Main Content Area) -->
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- 頂部導航欄 (Header) -->
-        <header class="flex items-center justify-between h-16 px-6 bg-white shadow-lg flex-shrink-0 z-10">
-            <!-- 漢堡菜單按鈕 (僅在移動端顯示) -->
-            <button id="menu-toggle" class="text-gray-500 hover:text-gray-600 md:hidden p-2 rounded-lg transition duration-150">
-                <!-- SVG Icon for Menu -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
+        <div class="cap-strip">
+            <span class="chip">AI 知識庫集成</span>
+            <span class="chip">作業自動化轉型</span>
+            <span class="chip">UI/UX 實務優化</span>
+            <span class="chip">數據洞察決策</span>
+        </div>
+    </div>
+</header>
+
+<!-- ══════════════════════════════════
+     TAB NAV
+══════════════════════════════════ -->
+<nav class="tab-nav" id="tab-nav">
+    <div class="tab-scroll">
+        <div class="tab-inner">
+            <button class="tab-btn active" data-tab="knowledge">
+                🤖 AI 知識庫
+                <span class="tab-count">2</span>
             </button>
-            <!-- 標題 -->
-            <h1 class="text-xl font-bold text-gray-800">
-                <span class="text-indigo-600">客戶檔案</span>
-            </h1>
+            <button class="tab-btn" data-tab="dataqc">
+                📊 數據質檢
+                <span class="tab-count">2</span>
+            </button>
+            <button class="tab-btn" data-tab="automation">
+                ⚙️ 流程自動化
+                <span class="tab-count">4</span>
+            </button>
+            <button class="tab-btn" data-tab="performance">
+                📈 績效管理
+                <span class="tab-count">V1+V2</span>
+            </button>
+            <button class="tab-btn" data-tab="innovation">
+                💡 創新工具
+                <span class="tab-count">2</span>
+            </button>
+        </div>
+    </div>
+</nav>
 
-            <!-- 使用者資訊/動作 -->
-            <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-500 hidden sm:block">系統架構師</span>
-                <button class="flex items-center p-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 transition duration-150">
-                    <!-- SVG Icon for User -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                    </svg>
-                    管理員
-                </button>
+<!-- ══════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════ -->
+<main class="max-w-6xl mx-auto px-6 md:px-10">
+
+    <!-- ─────────────────────────────
+         PANEL 1 : AI 知識庫
+    ───────────────────────────────── -->
+    <div id="panel-knowledge" class="tab-panel active">
+        <div class="panel-header">
+            <div class="panel-cat-label">Category 01 · AI Knowledge Systems</div>
+            <h2 class="text-2xl serif text-stone-800">AI 知識庫與數位助理</h2>
+            <p style="font-size:13px;color:#888;margin-top:6px;font-weight:300;">將散落的組織知識集中化，打造 24/7 即時決策支援體系</p>
+            <div class="jump-links">
+                <a class="jump-link" href="#p01">01 GPT 部門數位助理 X2</a>
+                <a class="jump-link" href="#p12">12 部門高效搜尋與知識管理系統</a>
             </div>
-        </header>
+        </div>
 
-        <!-- 主要內容區域 (單一滾動流) -->
-        <main class="flex-1 overflow-y-auto bg-gray-50 p-4 md:p-6 custom-scroll">
-            <div class="container mx-auto flex flex-col space-y-6">
-                
-                <!-- 1. 客戶核心資料區 (Core Data Card) -->
-                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-indigo-600">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b pb-3">
-                        <h2 class="text-2xl font-extrabold text-gray-800">客戶檔案</h2>
-                        <div class="flex space-x-2 mt-2 md:mt-0">
-                            <!-- 狀態標籤 - 客訴抱怨處理中 (緊急、醒目) -->
-                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                <!-- SVG Icon for Alert -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
-                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-                                </svg>
-                                客訴抱怨處理中
-                            </span>
-                            <!-- 狀態標籤 - 續約期 (提醒、重要) -->
-                            <span class="inline-flex items-center px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                <!-- SVG Icon for Calendar -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                                </svg>
-                                ISP續約期 (剩 28 天)
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- 核心資料網格 (8 個欄位) -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">客戶編號</p>
-                            <p class="font-bold text-indigo-600">C001</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">客戶姓名/聯絡人</p>
-                            <p class="font-bold text-gray-900">王小明</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">手機號碼</p>
-                            <p class="font-bold text-gray-900">0912-345678</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">生日</p>
-                            <p class="font-bold text-gray-900">1985-10-25</p>
-                        </div>
-                        <div class="sm:col-span-2 lg:col-span-2 p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">地址</p>
-                            <p class="font-bold text-gray-900">台北市信義區忠孝東路五段 100 號 12 樓</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">社區名稱</p>
-                            <p class="font-bold text-gray-900">信義之星</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">Mail</p>
-                            <p class="font-bold text-gray-900 truncate">wang.xiaoming@example.com</p>
-                        </div>
-                        <div class="p-2 bg-gray-50 rounded-lg">
-                            <p class="text-xs font-medium text-gray-500">身分證字號</p>
-                            <p class="font-bold text-gray-900">A123****78</p>
-                        </div>
-                    </div>
-                </div> <!-- End Core Data Card -->
-
-                <!-- 2. 服務狀態與提醒 (Service Status Card) -->
-                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-yellow-500">
-                    <h3 class="text-lg font-bold text-gray-800 mb-3 border-b pb-2">商品服務狀態與提醒</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                        
-                        <!-- 服務中商品 (ISP 到期日已整合至此) -->
-                        <div>
-                            <p class="font-semibold text-green-600 mb-2">現在服務中商品 (服務中)</p>
-                            <ul class="space-y-2 text-sm">
-                                <li class="p-3 bg-green-50 rounded-xl border border-green-200 flex justify-between items-center">
-                                    <div>
-                                        <span class="font-bold text-green-800">ISP 服務:</span>
-                                        <span class="ml-2">連線中 (500M/250M)</span>
-                                    </div>
-                                    <!-- ISP 到期日顯示在此 -->
-                                    <span class="text-xs font-semibold text-red-600">到期日: 2025-11-20</span>
-                                </li>
-                                <li class="p-3 bg-green-50 rounded-xl border border-green-200">
-                                    <span class="font-bold text-green-800">居家清潔:</span>
-                                    <span class="ml-2">年約方案</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- 即將可服務/到期提醒 -->
-                        <div>
-                            <p class="font-semibold text-yellow-600 mb-2">即將到期 / 可服務商品提醒</p>
-                            <ul class="space-y-2 text-xs">
-                                <li class="p-2 bg-yellow-50 rounded-xl border border-yellow-200">
-                                    <span class="font-bold text-yellow-800">雙網方案：</span>合約即將到期 (2025-11-20)
-                                </li>
-                                <li class="p-2 bg-yellow-50 rounded-xl border border-yellow-200">
-                                    <span class="font-bold text-yellow-800">影視服務：</span>服務即將到期 (2025-12-31)
-                                </li>
-                                <li class="p-2 bg-blue-50 rounded-xl border border-blue-200">
-                                    <span class="font-bold text-blue-800">家電清洗：</span>距離上次清洗已滿一年 (可促銷)
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div> <!-- End Service Status Card -->
-                
-                <!-- 3. 快捷操作區塊 (Quick Actions Card - 新位置：緊接在商品服務狀態下方) -->
-                <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-gray-400">
-                    <h3 class="text-xl font-bold text-gray-800 mb-4">快捷操作</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-center text-sm">
-                        
-                        <button class="p-4 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
-                            <!-- SVG Icon for Image -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                            客戶提供照片
-                        </button>
-                        <button class="p-4 bg-green-500 text-white rounded-xl hover:bg-green-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
-                            <!-- SVG Icon for Line Chat -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                            Line 對話紀錄
-                        </button>
-                        <button class="p-4 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
-                            <!-- SVG Icon for Phone Call/Message -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M22 16.92v3a2 2 0 0 1-2 2h-3.32a18.57 18.57 0 0 1-6.8-2.61a18.57 18.57 0 0 1-6.8-2.61a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3.32a18.57 18.57 0 0 1 6.8 2.61a18.57 18.57 0 0 1 6.8 2.61a2 2 0 0 1 2 2z"/></svg>
-                            聯絡紀錄
-                        </button>
-                        <button class="p-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
-                            <!-- SVG Icon for Billing -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><path d="M20 12V8H4v4m0 8h16v-4H4v4zM16 4h4V2h-4v2zM4 2v2h4V2H4zM2 10h20M7 16h2M13 16h4"/></svg>
-                            帳務資訊
-                        </button>
-                        <button class="p-4 bg-yellow-600 text-white rounded-xl hover:bg-yellow-700 transition duration-150 shadow-md transform hover:scale-[1.02] font-semibold">
-                            <!-- SVG Icon for Workflow -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-1"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                            會辦系統
-                        </button>
-                    </div>
-                </div> <!-- End Quick Actions Card -->
-
-                <!-- 4. 服務詳情內容 (Detail Content - 新位置：在快捷操作下方) -->
-                <div id="detail-content" class="bg-white p-6 rounded-2xl shadow-xl min-h-[40vh] border-t-4 border-gray-300">
-                    <!-- 內容將由 JavaScript 載入 (預設為 ISP 服務) -->
-                    <p class="text-gray-500 text-center py-10">載入服務詳情中...</p>
-                </div> <!-- End Detail Content (Dynamic Area) -->
-
+        <!-- P01 -->
+        <div id="p01" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">01 · 核心 AI 應用</span>
+                <h2 class="text-2xl serif">GPT 部門數位助理 X2</h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>作用：</strong>成功整合電銷與業務部異質領域（網路、Hami Video、LiTV、家電清洗）的產品知識、流程與話稿。</p>
+                    <p><strong>核心能力：</strong>知識集成化與決策去中心化。打破傳統對主管的諮詢依賴，實現 24/7 即時導師機制。</p>
+                </div>
+                <div class="annotation">
+                    <strong>具體效益：</strong>降低主管 70% 行政諮詢負擔，成交率預期提升 15%，確保一線人員資訊正確率達 100%。
+                </div>
             </div>
-        </main>
+            <div class="lg:col-span-7">
+                <div class="img-frame" style="height:320px;">
+                    <span class="fig-tag">GPT 數位助理</span>
+                    <img src="https://drive.google.com/thumbnail?id=1rwNlvTOxdXKycDY_4C1XRsL3l-S6dhf4&sz=w1000" alt="GPT 部門數位助理">
+                </div>
+            </div>
+        </div>
+
+        <!-- P12 -->
+        <div id="p12" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7">
+                <div class="img-frame" style="height:320px;">
+                    <span class="fig-tag">企業資料庫整合中樞</span>
+                    <img src="https://drive.google.com/thumbnail?id=1l7UULnpIALJybdrDbyyhYERuBk24ZOEZ&sz=w1000" alt="百筆資料整合與搜尋引擎">
+                </div>
+            </div>
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">12 · 資料庫整合</span>
+                <h2 class="text-2xl serif">部門高效搜尋與知識管理系統</h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>專案定位：</strong>針對電銷及後勤部門痛點，打造集「AI 助理、自動化流程、多模態工具」於一體的整合型企業知識庫。</p>
+                    <p><strong>資料架構：</strong>全面串聯行政及眾多商品，多達 13 類核心業務，收錄 159 筆結構化數據與核心教材。</p>
+                </div>
+                <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="chip">多源資料整合</span>
+                    <span class="chip">13 類核心業務</span>
+                    <span class="chip">多模態企業知識庫</span>
+                </div>
+                <div class="annotation">
+                    <strong>量化成效：</strong>系統上線短期累計服務 <strong>289+ 人次</strong>、<strong>82%</strong> 每週人員覆蓋率；降低 <strong>30%+</strong> 資料查找時間。
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- 側邊欄覆蓋層 (Overlay for mobile menu) -->
-    <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <!-- ─────────────────────────────
+         PANEL 2 : 數據質檢
+    ───────────────────────────────── -->
+    <div id="panel-dataqc" class="tab-panel">
+        <div class="panel-header">
+            <div class="panel-cat-label">Category 02 · Data Intelligence &amp; QA</div>
+            <h2 class="text-2xl serif text-stone-800">數據轉譯與智能質檢</h2>
+            <p style="font-size:13px;color:#888;margin-top:6px;font-weight:300;">從音頻數據到培訓閉環，以 AI 替代人工側聽，驅動精準輔導</p>
+            <div class="jump-links">
+                <a class="jump-link" href="#p02">02 逐字稿聲紋紀錄工具</a>
+                <a class="jump-link" href="#p03">03 AI 音檔質檢與閉環培訓</a>
+            </div>
+        </div>
 
-    <script type="text/javascript">
-        // =================================================================================
-        // 側邊欄 & RWD 邏輯
-        // =================================================================================
-        const sidebar = document.getElementById('sidebar');
-        const toggleButton = document.getElementById('menu-toggle');
-        const overlay = document.getElementById('overlay');
+        <!-- P02 -->
+        <div id="p02" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">02 · 智能數據轉譯</span>
+                <h2 class="text-2xl serif">逐字稿聲紋紀錄工具</h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>作用：</strong>導入 Google AI Studio 技術，將音檔轉化為包含情緒、聲紋分析的結構化文字。</p>
+                    <p><strong>核心能力：</strong>深層情緒解析。精準捕捉訊號不穩、語氣遲疑等情緒特徵，讓主管無需聽取全文即可判斷客戶猶疑點。</p>
+                </div>
+                <div class="annotation">
+                    <strong>具體效益：</strong>作為 AI 質檢的第一步，顯著縮短主管側聽時間，提升客戶輪廓標籤（Tagging）精準度。
+                </div>
+            </div>
+            <div class="lg:col-span-7">
+                <div class="img-frame" style="height:320px;">
+                    <span class="fig-tag">聲紋技術應用</span>
+                    <img src="https://drive.google.com/thumbnail?id=1rRox01vyH0XbGqhem70B4WPeOCd1BphA&sz=w1000" alt="逐字稿聲紋紀錄">
+                </div>
+            </div>
+        </div>
 
-        function toggleSidebar() {
-            // 切換側邊欄的 translate 狀態
-            const isHidden = sidebar.classList.toggle('-translate-x-full');
-            
-            // 切換覆蓋層的顯示狀態
-            if (isHidden) {
-                overlay.classList.add('hidden');
-            } else {
-                overlay.classList.remove('hidden');
-            }
-        }
+        <!-- P03 -->
+        <div id="p03" class="project-section space-y-8 bg-white p-8 md:p-10 rounded-xl shadow-sm border border-stone-100">
+            <div class="max-w-2xl mx-auto text-center space-y-3">
+                <span class="tech-label">03 · 閉環培訓系統</span>
+                <h2 class="text-2xl serif">AI 音檔質檢與教材產出</h2>
+                <p style="font-size:13px;color:#888;font-weight:300;">整合 NotebookLM，實現從「數據獲取」到「資源沈澱」的自動化培訓閉環。</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="img-frame" style="height:240px;">
+                    <span class="fig-tag">質檢報告模組</span>
+                    <img src="https://drive.google.com/thumbnail?id=1sQtg2gDHV1w0SQ-LLQ3fsQKtVPpoH2bC&sz=w800">
+                </div>
+                <div class="img-frame" style="height:240px;">
+                    <span class="fig-tag">影片教材產出</span>
+                    <img src="https://drive.google.com/thumbnail?id=19yye8InOyRhPeCcwdZcMo7UdXl8ECDkc&sz=w800">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center pt-6 border-t border-stone-100">
+                <div>
+                    <h4 class="font-bold text-stone-800 mb-2 italic serif text-sm">智能質檢</h4>
+                    <p style="font-size:12px;color:#888;line-height:1.7;font-weight:300;">自動產生情緒、語意、溝通評分表，並給予深度優缺點評述與話稿建議。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-stone-800 mb-2 italic serif text-sm">教材自動化</h4>
+                    <p style="font-size:12px;color:#888;line-height:1.7;font-weight:300;">匯出質檢結果後自動轉化為短影片教材，實現秒級資源生產。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-stone-800 mb-2 italic serif text-sm">數據化增長</h4>
+                    <p style="font-size:12px;color:#888;line-height:1.7;font-weight:300;">偵測締結有效性，為主管提供精準的 1-on-1 輔導戰略方向。</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        toggleButton.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar); // 點擊覆蓋層關閉側邊欄
+    <!-- ─────────────────────────────
+         PANEL 3 : 流程自動化
+    ───────────────────────────────── -->
+    <div id="panel-automation" class="tab-panel">
+        <div class="panel-header">
+            <div class="panel-cat-label">Category 03 · Process Automation</div>
+            <h2 class="text-2xl serif text-stone-800">流程自動化與系統整合</h2>
+            <p style="font-size:13px;color:#888;margin-top:6px;font-weight:300;">將複雜業務邏輯工程化，消除人工誤差，系統性提升組織效能</p>
+            <div class="jump-links">
+                <a class="jump-link" href="#p04">04 雙網客戶工項自動化介面</a>
+                <a class="jump-link" href="#p08">08 Webhook 即時監控中樞</a>
+                <a class="jump-link" href="#p09">09 三大指標自動計算通知</a>
+                <a class="jump-link" href="#p11">11 退費跨部門決策分工系統</a>
+            </div>
+        </div>
 
-        // 監聽窗口大小變化，若進入桌面模式，確保側邊欄和覆蓋層狀態正確
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 768) { // md breakpoint in Tailwind is 768px
-                // 在桌面模式下，確保側邊欄顯示，覆蓋層隱藏
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.add('hidden');
-            } else {
-                // 在移動模式下，如果側邊欄是開的，則顯示覆蓋層
-                if (!sidebar.classList.contains('-translate-x-full')) {
-                     overlay.classList.remove('hidden');
-                }
-            }
+        <!-- P04 -->
+        <div id="p04" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">04 · 作業流程重塑</span>
+                <h2 class="text-2xl serif">雙網客戶工項自動化介面</h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>作用：</strong>整合 Gemini 邏輯判斷與 GitHub 部署，針對 142,800 種合約組合進行程式化運算，自動產出工項清單。</p>
+                    <p><strong>核心能力：</strong>複雜變數工程化。破解電信、資費、月份、派送等五大核心變數的連動關係。</p>
+                </div>
+                <div class="annotation">
+                    <strong>具體效益：</strong>
+                    <ul class="mt-2 space-y-1" style="font-size:12px;">
+                        <li>① <strong>行政防錯 100%</strong>：違約金與工項產出「0 誤差率」，徹底消除人為風險。</li>
+                        <li>② <strong>業績逆勢成長 65%</strong>：月均業績由 89 門拉升至 147 門（單月最高 162 門）。</li>
+                        <li>③ <strong>人效躍升 79%</strong>：人均產能由 38 件提升至 56 件，年度締結 1,433 件。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lg:col-span-7">
+                <div class="img-frame" style="height:320px;">
+                    <span class="fig-tag">自動化介面展示</span>
+                    <img src="https://drive.google.com/thumbnail?id=17omhlj9mc5-2tIPwuDTt8R_qdhWvbGzk&sz=w1000">
+                </div>
+            </div>
+        </div>
+
+        <!-- P08 & P09 side by side -->
+        <div class="project-section grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- P08 -->
+            <div id="p08" class="bg-white p-7 rounded-xl border border-stone-100 shadow-sm space-y-5 flex flex-col">
+                <div>
+                    <span class="tech-label">08 · 多元即時提醒中樞</span>
+                    <h3 class="text-lg serif mt-1">Webhook 即時監控提醒中樞</h3>
+                </div>
+                <div class="img-frame flex-1" style="min-height:200px;">
+                    <span class="fig-tag">Webhook 即時通報</span>
+                    <img src="https://drive.google.com/thumbnail?id=1bZVNMcZilKupeqt3zZXeeqQIuGvoWs5k&sz=w1000" alt="Webhook 監控">
+                </div>
+                <div style="font-size:13px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-2">
+                    <p><strong>作用：</strong>串接 Google Forms、Webhook 與 Chat API，實現黃金時間即時響應。</p>
+                    <p><strong>關鍵能力：</strong>客戶一填表立即觸發通知，讓業務 / 客服在黃金 5 分鐘內介入。</p>
+                </div>
+                <div class="annotation" style="font-size:12px;">
+                    打破被動檢查模式，實現「秒級介入」，提升成交轉化率並降低人工檢查成本。
+                </div>
+            </div>
+
+            <!-- P09 -->
+            <div id="p09" class="dark-card flex flex-col space-y-5">
+                <div>
+                    <span class="tech-label">09 · 進階應用</span>
+                    <h3 class="text-lg serif mt-1" style="color:#F5F0EB;">業助雙網工項三大指標自動計算通知</h3>
+                    <p style="font-size:11px;color:#9D8E84;margin-top:4px;">核心技術：Webhook 即時串接 + Google 試算表邏輯引擎 + 可視化儀表板</p>
+                </div>
+                <div class="img-frame flex-1" style="min-height:200px;">
+                    <span class="fig-tag" style="background:rgba(215,196,177,0.85);color:#3E2723;">指標自動化看板</span>
+                    <img src="https://drive.google.com/thumbnail?id=1voVSsvRTORGx4tJvk0st4PKB5wlY9y52&sz=w1000">
+                </div>
+                <div class="grid grid-cols-3 gap-3 text-center pt-2">
+                    <div>
+                        <div class="serif text-sm mb-1" style="color:var(--oak);">管理透明化</div>
+                        <p style="font-size:11px;color:#9D8E84;line-height:1.6;">Webhook 即時同步進度，無需詢問即掌握作業量。</p>
+                    </div>
+                    <div>
+                        <div class="serif text-sm mb-1" style="color:var(--oak);">風險預警</div>
+                        <p style="font-size:11px;color:#9D8E84;line-height:1.6;">監控取消率與派工率，即時發現前後端脫節。</p>
+                    </div>
+                    <div>
+                        <div class="serif text-sm mb-1" style="color:var(--oak);">數據調度</div>
+                        <p style="font-size:11px;color:#9D8E84;line-height:1.6;">量化工作負荷，作為人力增減的客觀依據。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- P11 -->
+        <div id="p11" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">11 · 跨部門決策分工引擎</span>
+                <h2 class="text-2xl serif">雙網退費跨部門決策與任務自動化分工系統</h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>專案成果：</strong>將極複雜的跨部門業務，轉化為「3秒防呆派單」決策引擎。</p>
+                    <ul class="space-y-2" style="font-size:12px;">
+                        <li style="display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--oak);flex-shrink:0;">◆</span><span><strong>全情境動態覆蓋：</strong>涵蓋 5 個權責角色與 20+ 種複雜退費情境。</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--oak);flex-shrink:0;">◆</span><span><strong>4 階層決策樹：</strong>自動過濾關聯，偵測付款與發票狀態，代碼級任務自動轉移，消除重複退費與稅務風險。</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--oak);flex-shrink:0;">◆</span><span><strong>一鍵複製派單：</strong>群組分工明確清楚，大幅縮減流程。</span></li>
+                    </ul>
+                </div>
+                <div class="flex flex-wrap gap-1">
+                    <span class="chip">4 階層決策樹</span>
+                    <span class="chip">自動化任務分流</span>
+                    <span class="chip">防呆防漏機制</span>
+                </div>
+                <div class="annotation">
+                    <strong>量化效益：</strong>
+                    <ul class="mt-2 space-y-1" style="font-size:12px;">
+                        <li>• <strong>決策效率提升 90%</strong>：30 分鐘縮短至 3 秒。</li>
+                        <li>• <strong>溝通成本降低 90%</strong>：一鍵生成格式化派單直發群組。</li>
+                        <li>• <strong>漏單率降至 0%</strong>：自動屏蔽冗餘角色，精準鎖定職責。</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lg:col-span-7 space-y-4">
+                <div class="img-frame" style="height:260px;">
+                    <span class="fig-tag">決策系統主介面</span>
+                    <img src="https://drive.google.com/thumbnail?id=1lHLqmh_iCbp7WSz1pQboolpGHfdYUIFt&sz=w1000" alt="退費決策系統主介面">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="img-frame" style="height:170px;">
+                        <span class="fig-tag">決策路徑分流</span>
+                        <img src="https://drive.google.com/thumbnail?id=1UXxirbCYR-0x_uF2PUbHfFLmAwkdv9Nv&sz=w600" alt="退費情境分流圖">
+                    </div>
+                    <div class="img-frame" style="height:170px;">
+                        <span class="fig-tag">自動化派單成果</span>
+                        <img src="https://drive.google.com/thumbnail?id=1rkZ3rA4HwfpSCrhaMa4hdE2spGOQN75n&sz=w600" alt="自動派單生成結果">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─────────────────────────────
+         PANEL 4 : 績效管理
+    ───────────────────────────────── -->
+    <div id="panel-performance" class="tab-panel">
+        <div class="panel-header">
+            <div class="panel-cat-label">Category 04 · Performance Management</div>
+            <h2 class="text-2xl serif text-stone-800">績效管理與激勵系統</h2>
+            <p style="font-size:13px;color:#888;margin-top:6px;font-weight:300;">將碎片化考核數據轉化為可視化績效中樞，驅動精準 1-on-1 輔導與正向激勵</p>
+            <div class="jump-links">
+                <a class="jump-link" href="#pv1">06 服務之星 V1 — 流程自動化基礎</a>
+                <a class="jump-link" href="#pv2">07 服務之星 V2 — 數據可視化轉型</a>
+            </div>
+        </div>
+
+        <!-- Section Title -->
+        <div class="text-center mb-10">
+            <span class="tech-label">06-07 · 績效管理與激勵系統（V1 → V2 數位演進）</span>
+            <h2 class="text-3xl serif text-stone-800 mt-1">服務之星：從自動化到深度行為洞察</h2>
+        </div>
+
+        <!-- V1 -->
+        <div id="pv1" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7">
+                <div class="img-frame" style="height:300px;">
+                    <span class="fig-tag">V1 流程自動化</span>
+                    <img src="https://drive.google.com/thumbnail?id=1l0VAQPUGqkOMQtN2cGqF1K7BdKr62zzX&sz=w1000">
+                </div>
+            </div>
+            <div class="lg:col-span-5 space-y-5">
+                <div style="display:inline-block;background:#E8E2DB;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;">PHASE 1</div>
+                <h3 class="text-xl serif" style="text-decoration:underline;text-decoration-color:var(--oak);text-underline-offset:8px;">V1：流程自動化基礎</h3>
+                <p style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;">透過 <strong>Apps Script</strong> 解決跨組別數據整合痛點，實現考核結果「一鍵分發」，解決原本繁瑣的手動作業，確保反饋即時性。</p>
+            </div>
+        </div>
+
+        <!-- V2 -->
+        <div id="pv2" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-5 space-y-5">
+                <div style="display:inline-block;background:#3E2723;color:white;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:1px;">PHASE 2</div>
+                <h3 class="text-xl serif" style="text-decoration:underline;text-decoration-color:var(--oak);text-underline-offset:8px;">V2：數據可視化轉型</h3>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p>運用 <strong>Gemini 協作開發與 GitHub 部署</strong>，將冰冷數字轉化為年度趨勢圖、個人總分與各考核項目趨勢圖，管理者可一眼識別成長曲線或衰退預警。</p>
+                    <ul class="space-y-2" style="font-size:12px;">
+                        <li style="display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--oak);flex-shrink:0;">◆</span><span><strong>精準輔導：</strong>面談前即掌握半年表現波動，告別憑感覺管理。</span></li>
+                        <li style="display:flex;align-items:flex-start;gap:6px;"><span style="color:var(--oak);flex-shrink:0;">◆</span><span><strong>榮譽機制：</strong>名人堂模組提升競爭意識與歸屬感。</span></li>
+                    </ul>
+                </div>
+                <div class="annotation">
+                    <strong>核心價值：</strong>成功將「行政考核」升級為「正面激勵機制」，顯著提升團隊績效穩定度。
+                </div>
+            </div>
+            <div class="lg:col-span-7 space-y-4">
+                <div class="img-frame" style="height:260px;">
+                    <span class="fig-tag">V2 年度趨勢看板</span>
+                    <img src="https://drive.google.com/thumbnail?id=1BUXfWSacOM0goIR7bwAppYAmrhWoxns2&sz=w1000">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="img-frame" style="height:170px;">
+                        <img src="https://drive.google.com/thumbnail?id=1x6_UHASPqPSZr6DtUnXqgt3XGIwUBOAz&sz=w600">
+                    </div>
+                    <div class="img-frame" style="height:170px;">
+                        <img src="https://drive.google.com/thumbnail?id=1VahGs9eU6iZF7bGxP_sdE0fXzitl5-R0&sz=w600">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─────────────────────────────
+         PANEL 5 : 創新工具
+    ───────────────────────────────── -->
+    <div id="panel-innovation" class="tab-panel">
+        <div class="panel-header">
+            <div class="panel-cat-label">Category 05 · Innovation &amp; UX Tools</div>
+            <h2 class="text-2xl serif text-stone-800">創新應用與客戶體驗設計</h2>
+            <p style="font-size:13px;color:#888;margin-top:6px;font-weight:300;">以使用者視角打造直覺互動工具，縮短決策時間，提升轉換率與生活品質</p>
+            <div class="jump-links">
+                <a class="jump-link" href="#p05">05 雙版本優惠試算機</a>
+                <a class="jump-link" href="#p10">10 寶貝獎勵看板</a>
+            </div>
+        </div>
+
+        <!-- P05 -->
+        <div id="p05" class="project-section space-y-6">
+            <div class="space-y-2">
+                <span class="tech-label">05 · 客戶端轉換策略</span>
+                <h2 class="text-2xl serif">雙版本優惠試算機</h2>
+                <p style="font-size:14px;color:#5a5a5a;font-weight:300;max-width:640px;line-height:1.8;">針對不同客群開發兩種版本的 UI 試算工具，讓客戶在選取個人情境後，立即獲得個人化優惠結果，大幅縮短考慮期。</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="img-frame" style="height:260px;">
+                    <img src="https://drive.google.com/thumbnail?id=1ijYyjahEjsmPPb48Z6XC-uqZWw3d9LnV&sz=w600">
+                </div>
+                <div class="img-frame" style="height:260px;">
+                    <img src="https://drive.google.com/thumbnail?id=116zsv7BKPha6pwjs-IvI0FY1zWOh-gmN&sz=w600">
+                </div>
+                <div class="img-frame" style="height:260px;">
+                    <img src="https://drive.google.com/thumbnail?id=1IHI5L65YKrH9pZxT_AMM8QSedi1N5eng&sz=w600">
+                </div>
+            </div>
+        </div>
+
+        <!-- P10 -->
+        <div id="p10" class="project-section grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-5 space-y-5">
+                <span class="tech-label">10 · 特殊作品 | 家庭教育數位工具</span>
+                <h2 class="text-2xl serif">寶貝獎勵看板<br><span class="text-base font-normal text-stone-400 not-serif" style="font-family:'Noto Sans TC';">Baby Reward Board</span></h2>
+                <div style="font-size:14px;color:#5a5a5a;font-weight:300;line-height:1.8;" class="space-y-3">
+                    <p><strong>初衷：</strong>將建立生活規律的痛點轉化為有趣的「升級遊戲」，解決紙本勾選表易遺失且缺乏數據統計的問題。</p>
+                    <p><strong>核心價值：</strong>高度客製化正向循環。系統的色調、孩子專屬色、代表 Emoji 均可自由選取；任務設定與獎勵單位（星幣、點數）亦可靈活調整，實現延遲滿足與資產管理的教育目標。</p>
+                </div>
+                <div class="flex flex-wrap gap-1">
+                    <span class="chip">個性化 UI 客製</span>
+                    <span class="chip">動態任務引擎</span>
+                    <span class="chip">LocalStorage 離線儲存</span>
+                </div>
+                <div class="annotation">
+                    <strong>看點：</strong>透過數據視覺化建立成就感，將「被動執行」轉向「主動爭取」。
+                </div>
+            </div>
+            <div class="lg:col-span-7 space-y-3">
+                <p style="font-size:10px;color:#aaa;letter-spacing:.4em;text-transform:uppercase;font-style:italic;">系統介面與功能展示</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="img-frame" style="height:190px;">
+                        <img src="https://drive.google.com/thumbnail?id=1YOKsqTO44z-Eke3slZcu2W2bpJAfDDWO&sz=w600">
+                    </div>
+                    <div class="img-frame" style="height:190px;">
+                        <img src="https://drive.google.com/thumbnail?id=1iNGcpyB3H415OZAzbeOvtYZzQva3Kbtq&sz=w600">
+                    </div>
+                    <div class="img-frame" style="height:190px;">
+                        <img src="https://drive.google.com/thumbnail?id=1-G-qu7oFLEfXfCrzVli-nmZV9kd6vydV&sz=w600">
+                    </div>
+                    <div class="img-frame" style="height:190px;">
+                        <img src="https://drive.google.com/thumbnail?id=1p4DnKiHHND0cqjFkd6vydV&sz=w600">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer style="padding:3rem 2rem;text-align:center;color:#bbb;font-size:10px;letter-spacing:.5em;text-transform:uppercase;border-top:1px solid #E8E2DB;margin-top:4rem;">
+    Ivy Yen · AI Operations Portfolio · 2025 Edition
+</footer>
+
+<script>
+    const tabBtns  = document.querySelectorAll('.tab-btn');
+    const tabNav   = document.getElementById('tab-nav');
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.dataset.tab;
+
+            // swap active button
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // swap active panel
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('panel-' + target).classList.add('active');
+
+            // scroll tab nav to top of viewport
+            const navTop = tabNav.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: navTop - 4, behavior: 'smooth' });
         });
+    });
 
-        // 初始檢查 (確保頁面加載時的狀態正確)
-        if (window.innerWidth >= 768) {
-             sidebar.classList.remove('-translate-x-full');
-        } else {
-             sidebar.classList.add('-translate-x-full');
-        }
-
-        // =================================================================================
-        // 內容動態載入邏輯
-        // =================================================================================
-
-        const detailContent = document.getElementById('detail-content');
-        const navLinks = document.querySelectorAll('nav a'); // 所有側邊欄連結
-
-        // 1. ISP 服務內容
-        function generateISPContent() {
-            return `
-                <h2 class="text-xl font-bold text-indigo-600 mb-4 border-b pb-2">ISP 服務 - 基本資訊與網路狀態</h2>
-                <p class="text-gray-500 mb-4">網際網路服務供應商 (ISP) 的詳細連線與合約資訊。</p>
-
-                <!-- ISP 基本資訊 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">基本資訊</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">社區網速</p>
-                        <p class="font-bold text-gray-900">500M / 250M</p>
-                    </div>
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">光化 / 乙太</p>
-                        <p class="font-bold text-gray-900">光化 (FTTH)</p>
-                    </div>
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">網路到期日</p>
-                        <p class="font-bold text-red-600">2025-11-20</p>
-                    </div>
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">分享器型號</p>
-                        <p class="font-bold text-gray-900">ASUS RT-AX55</p>
-                    </div>
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">路由資訊</p>
-                        <p class="font-bold text-gray-900">Static IP / 內網 A100</p>
-                    </div>
-                    <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <p class="text-xs font-medium text-indigo-600">負責業務</p>
-                        <p class="font-bold text-gray-900">陳大仁 (Ext. 301)</p>
-                    </div>
-                </div>
-
-                <!-- 網路狀況後台紀錄 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">網路狀況後台紀錄</h3>
-                <div class="space-y-4 text-sm">
-                    <div class="p-4 bg-gray-100 rounded-lg text-gray-700">
-                        <p class="font-semibold mb-1">Log / Ping / 流量表 / 近期報修:</p>
-                        <ul class="list-disc list-inside ml-4 text-gray-600">
-                            <li>Log: 過去 7 天無異常紀錄。</li>
-                            <li>Ping: 平均延遲 5ms (正常)。</li>
-                            <li>流量表: 本月使用量 800GB (高用量戶)。</li>
-                            <li>近期報修: 無 (上次報修: 2024-03-15, 已結案)。</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- 客戶需求單入口 -->
-                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：ISP 服務相關需求</span>
-                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立需求單
-                        </button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 2. 社區資訊內容
-        function generateCommunityContent() {
-            return `
-                <h2 class="text-xl font-bold text-green-600 mb-4 border-b pb-2">社區資訊 - 信義之星</h2>
-                <p class="text-gray-500 mb-4">社區的整體合作狀態與環境資訊，有助於交叉銷售。</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-                    <!-- 社區基本資料 -->
-                    <div class="col-span-1 p-4 bg-green-50 rounded-xl border border-green-200">
-                        <h3 class="font-bold text-green-700 mb-2">社區基本資料</h3>
-                        <ul class="space-y-1">
-                            <li><span class="font-medium text-gray-600">總戶數:</span> 300 戶</li>
-                            <li><span class="font-medium text-gray-600">合約狀態:</span> 合作中 (2023-2028)</li>
-                            <li><span class="font-medium text-gray-600">導入年份:</span> 2023 年</li>
-                            <li><span class="font-medium text-gray-600">社區導入類型:</span> 全光纖社區導入 (GPON)</li>
-                            <li><span class="font-medium text-gray-600">社區保全名稱:</span> 台灣保全</li>
-                        </ul>
-                    </div>
-                    
-                    <!-- 社區優惠 & 工程 -->
-                    <div class="col-span-1 p-4 bg-green-50 rounded-xl border border-green-200">
-                        <h3 class="font-bold text-green-700 mb-2">社區優惠與工程</h3>
-                        <ul class="space-y-1">
-                            <li><span class="font-medium text-gray-600">社區優惠:</span> 網速升級折扣 (長期)</li>
-                            <li><span class="font-medium text-gray-600">團購活動:</span> 智生活服務 8 折 (2025 Q4)</li>
-                            <li><span class="font-medium text-gray-600">社區工程:</span> 預計 2026 年進行線路升級。</li>
-                        </ul>
-                    </div>
-
-                    <!-- 特殊備註 -->
-                    <div class="col-span-1 p-4 bg-gray-100 rounded-xl border border-gray-200">
-                        <h3 class="font-bold text-gray-700 mb-2">特殊備註</h3>
-                        <p class="text-sm text-gray-600">管委會對雙網方案興趣高，可優先推廣。
-                        <p class="text-sm text-gray-600 mt-2">請注意：該社區網路尖峰時段負載較高，報修需優先處理。</p>
-                    </div>
-                </div>
-                
-                <!-- 客戶需求單入口 -->
-                <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                    <span class="font-semibold text-yellow-800">客戶需求單 (入口)：社區相關資訊更新/建議等需求</span>
-                    <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                        立需求單
-                    </button>
-                </div>
-            `;
-        }
-
-        // 3. 雙網方案內容 (已更新)
-        function generateDualNetContent() {
-            return `
-                <h2 class="text-xl font-bold text-orange-600 mb-4 border-b pb-2">雙網方案</h2>
-                <p class="text-gray-500 mb-4">檢視客戶對於雙網方案的銷售狀態和申辦處理進度。</p>
-
-                <!-- 方案銷售狀態 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">方案銷售狀態</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-blue-100 rounded-lg border border-blue-300">
-                        <p class="text-xs font-medium text-blue-600">狀態</p>
-                        <p class="font-bold text-blue-800">申辦中</p>
-                    </div>
-                    <div class="p-3 bg-green-100 rounded-lg border border-green-300">
-                        <p class="text-xs font-medium text-green-600">合約狀態</p>
-                        <p class="font-bold text-green-800">合約簽訂完成</p>
-                    </div>
-                    <div class="p-3 bg-red-100 rounded-lg border border-red-300">
-                        <p class="text-xs font-medium text-red-600">網路優惠期</p>
-                        <p class="font-bold text-red-800">2 個月</p>
-                    </div>
-                    <div class="p-3 bg-gray-100 rounded-lg border border-gray-200">
-                        <p class="text-xs font-medium text-gray-600">申辦人員</p>
-                        <p class="font-bold text-gray-800">王小花 (Ext. 202)</p>
-                    </div>
-                </div>
-
-                <!-- 客戶申辦資訊與進度 (新增區塊) -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">客戶申辦資訊與進度</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-6">
-                    <!-- 申辦細節 -->
-                    <div class="space-y-2">
-                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">原門號:</span> 遠傳</p>
-                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">攜碼方案:</span> 中華999方案</p>
-                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">網路加購價:</span> 0元</p>
-                        <p class="p-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-600">贈送項目:</span> 網路2個月</p>
-                    </div>
-                    <!-- 進度追蹤 -->
-                    <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-                        <h4 class="font-bold text-yellow-700 mb-2">申辦進度</h4>
-                        <ul class="list-disc list-inside ml-4 space-y-1 text-gray-700">
-                            <li>SIM卡已取得 (已完成)</li>
-                            <li>已上線 (門號攜入完成)</li>
-                            <li class="font-bold text-red-600">待開通 (預計開通日: 2025-11-02)</li>
-                        </ul>
-                        <div class="mt-3 text-xs text-right text-gray-500">
-                            最後更新: 2025-10-31
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 動作區塊 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">立單與電商連結</h3>
-                <div class="space-y-4 text-sm">
-                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-blue-800">派工單：可立單給各負責部門業務派工（記錄工時）</span>
-                        <button class="flex items-center text-blue-700 bg-blue-200 hover:bg-blue-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立派工單
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：方案調整/報價等需求</span>
-                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立需求單
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-green-800">電商平台 (入口)：前往雙網方案訂購頁面</span>
-                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            前往訂購
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 4. 家電清洗內容
-        function generateCleaningContent() {
-            return `
-                <h2 class="text-xl font-bold text-purple-600 mb-4 border-b pb-2">智生活服務 - 家電清洗</h2>
-                <p class="text-gray-500 mb-4">客戶歷史家電清洗服務紀錄與付款資訊。</p>
-
-                <!-- 家電清洗紀錄 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">家電清洗紀錄 (最近一次)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <p class="text-xs font-medium text-purple-600">清洗日期</p>
-                        <p class="font-bold text-gray-900">2024-10-25</p>
-                    </div>
-                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <p class="text-xs font-medium text-purple-600">清洗家電</p>
-                        <p class="font-bold text-gray-900">冷氣 (3台) / 洗衣機 (1台)</p>
-                    </div>
-                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <p class="text-xs font-medium text-purple-600">機齡</p>
-                        <p class="font-bold text-gray-900">冷氣 5 年 / 洗衣機 2 年</p>
-                    </div>
-                    <div class="p-3 bg-purple-50 rounded-lg border border-purple-200">
-                        <p class="text-xs font-medium text-purple-600">費用</p>
-                        <p class="font-bold text-red-600">TWD 9,500</p>
-                    </div>
-                </div>
-
-                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6 border-t pt-4">訂單與付款資訊</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-gray-100 rounded-lg border border-gray-200">
-                        <p class="text-xs font-medium text-gray-600">訂單編號</p>
-                        <p class="font-bold text-gray-800">CL20241025001</p>
-                    </div>
-                    <div class="md:col-span-2 p-3 bg-gray-100 rounded-lg border border-gray-200">
-                        <p class="text-xs font-medium text-gray-600">付款資訊</p>
-                        <p class="font-bold text-gray-800">信用卡一次付清 (結尾 4321)</p>
-                    </div>
-                </div>
-
-                <!-- 動作區塊 -->
-                <div class="space-y-4 text-sm">
-                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：服務調整/預約/客訴等需求</span>
-                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立需求單
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-green-800">訂購服務、電商平台 (入口)：前往清洗服務訂購頁面</span>
-                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            前往電商
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 5. 影視服務內容
-        function generateVideoContent() {
-            return `
-                <h2 class="text-xl font-bold text-red-600 mb-4 border-b pb-2">智生活服務 - 影視服務</h2>
-                <p class="text-gray-500 mb-4">客戶歷史影視服務訂購紀錄。</p>
-
-                <!-- 影視服務訂購紀錄 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">影視服務訂購紀錄 (最近一次)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <p class="text-xs font-medium text-red-600">訂購方案品項資訊</p>
-                        <p class="font-bold text-gray-900">豪華影視包 (含 HBO, Netflix 基礎)</p>
-                    </div>
-                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <p class="text-xs font-medium text-red-600">使用期限</p>
-                        <p class="font-bold text-red-600">至 2025-12-31 (即將到期)</p>
-                    </div>
-                    <div class="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <p class="text-xs font-medium text-red-600">訂單編號</p>
-                        <p class="font-bold text-gray-900">V20241001001</p>
-                    </div>
-                </div>
-
-                <!-- 動作區塊 -->
-                <div class="space-y-4 text-sm mt-6 border-t pt-4">
-                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：方案升級/續約/退訂等需求</span>
-                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立需求單
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-green-800">訂購服務、電商平台 (入口)：前往影視服務訂購頁面</span>
-                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            前往電商
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 6. 居家清潔內容
-        function generateHouseCleaningContent() {
-            return `
-                <h2 class="text-xl font-bold text-cyan-600 mb-4 border-b pb-2">智生活服務 - 居家清潔</h2>
-                <p class="text-gray-500 mb-4">客戶居家清潔服務訂購紀錄與服務排程。</p>
-
-                <!-- 居家清潔訂購紀錄 -->
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">居家清潔訂購紀錄 (當前方案)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-6">
-                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
-                        <p class="text-xs font-medium text-cyan-600">服務方案品項資訊</p>
-                        <p class="font-bold text-gray-900">每月兩次 (4 小時/次) 年約方案</p>
-                    </div>
-                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
-                        <p class="text-xs font-medium text-cyan-600">服務期限</p>
-                        <p class="font-bold text-gray-900">2025-01-01 至 2025-12-31</p>
-                    </div>
-                    <div class="p-3 bg-cyan-50 rounded-lg border border-cyan-200">
-                        <p class="text-xs font-medium text-cyan-600">下次預約日期</p>
-                        <p class="font-bold text-gray-900">2025-11-05 (已確認)</p>
-                    </div>
-                </div>
-
-                <!-- 動作區塊 -->
-                <div class="space-y-4 text-sm mt-6 border-t pt-4">
-                    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-yellow-800">客戶需求單 (入口)：排程調整/服務內容更改等需求</span>
-                        <button class="flex items-center text-yellow-700 bg-yellow-200 hover:bg-yellow-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            立需求單
-                        </button>
-                    </div>
-                    
-                    <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-sm flex justify-between items-center">
-                        <span class="font-semibold text-green-800">電商平台 (入口)：前往居家清潔服務訂購頁面</span>
-                        <a href="#" target="_blank" class="flex items-center text-green-700 bg-green-200 hover:bg-green-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                            前往電商
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // 7. 其他服務內容 (留白)
-        function generateOtherContent() {
-            return `
-                <h2 class="text-xl font-bold text-gray-700 mb-4 border-b pb-2">智生活服務 - 其他服務</h2>
-                <p class="text-gray-500 mb-4">預留區塊，用於日後新服務上架，例如：社區團購、健康管理等。</p>
-
-                <div class="p-8 bg-gray-100 rounded-xl text-center text-gray-500 border border-dashed border-gray-300 min-h-[200px] flex items-center justify-center">
-                    <p class="text-lg font-semibold">此處為新服務上架的留白區塊</p>
-                </div>
-
-                <!-- 客戶需求單入口 -->
-                <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg text-sm flex justify-between items-center">
-                    <span class="font-semibold text-red-800">客戶需求單：點此可立單將客戶需求轉到各部門 (例如：提議新服務)</span>
-                    <button class="flex items-center text-red-700 bg-red-200 hover:bg-red-300 px-3 py-1.5 rounded-xl transition duration-150 font-medium shadow-md">
-                        立需求單
-                    </button>
-                </div>
-            `;
-        }
-
-        /**
-         * 設定活動連結的樣式
-         * @param {string} activeId 當前活動連結的 ID
-         */
-        function setActiveLink(activeId) {
-            navLinks.forEach(link => {
-                link.classList.remove('bg-indigo-700', 'text-white', 'font-bold');
-                link.classList.add('text-gray-300', 'font-medium', 'hover:bg-gray-700', 'hover:text-white');
-                
-                // 重置所有 SVG Icon 顏色為灰色
-                const icon = link.querySelector('svg');
-                if (icon) {
-                    icon.classList.remove('text-white');
-                    icon.classList.add('text-gray-400');
-                }
-            });
-
-            const activeLink = document.getElementById(activeId);
-            if (activeLink) {
-                // 設定活動連結的背景和文字樣式
-                activeLink.classList.remove('text-gray-300', 'font-medium', 'hover:bg-gray-700', 'hover:text-white');
-                activeLink.classList.add('bg-indigo-700', 'text-white', 'font-bold', 'shadow-inner');
-
-                // 設定活動連結的 SVG Icon 顏色為白色
-                const activeIcon = activeLink.querySelector('svg');
-                if (activeIcon) {
-                    activeIcon.classList.remove('text-gray-400');
-                    activeIcon.classList.add('text-white');
-                }
-            }
-        }
-
-        /**
-         * 載入指定 ID 的內容到詳情區塊
-         * @param {string} contentId 連結的 ID
-         */
-        function loadContent(contentId) {
-            let contentHtml = '';
-            let activeId = contentId;
-
-            switch (contentId) {
-                case 'nav-isp':
-                    contentHtml = generateISPContent();
-                    break;
-                case 'nav-community':
-                    contentHtml = generateCommunityContent();
-                    break;
-                case 'nav-dualnet':
-                    contentHtml = generateDualNetContent();
-                    break;
-                case 'nav-cleaning':
-                    contentHtml = generateCleaningContent();
-                    break;
-                case 'nav-video':
-                    contentHtml = generateVideoContent();
-                    break;
-                case 'nav-house':
-                    contentHtml = generateHouseCleaningContent();
-                    break;
-                case 'nav-other':
-                    contentHtml = generateOtherContent();
-                    break;
-                default:
-                    contentHtml = generateISPContent(); // 預設載入 ISP 服務
-                    activeId = 'nav-isp';
-            }
-
-            detailContent.innerHTML = contentHtml;
-            setActiveLink(activeId);
-        }
-
-        // 附加事件監聽器到所有導航連結
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                loadContent(e.currentTarget.id);
-                // 在移動設備上，點擊後關閉側邊欄
-                if (window.innerWidth < 768) {
-                    toggleSidebar();
-                }
-            });
+    // anchor jump-links (smooth scroll within panel)
+    document.querySelectorAll('.jump-link').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const id  = link.getAttribute('href').slice(1);
+            const el  = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-
-        // 頁面載入完成後，載入預設內容 (ISP 服務)
-        window.addEventListener('load', () => {
-             loadContent('nav-isp');
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
